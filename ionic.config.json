@@ -1,0 +1,7 @@
+{
+  "name": "Proyecto_listas_nogueira",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
