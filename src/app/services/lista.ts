@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,7 +18,11 @@ export class ListaService {
             completada: false,
             actividad: []
         };
+
         this.estadoListas.update((listas) => [...listas, objetoLista]);
+        this.persistirStorage();
+
+        return objetoLista.titulo;
     }
 
     guardarStorage() {
@@ -31,8 +36,9 @@ export class ListaService {
     }
 
 
-
-
-
+    
 }
+
+
+
 
