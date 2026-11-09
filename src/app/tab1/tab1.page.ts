@@ -1,4 +1,7 @@
 import { Component } from '@angular/core';
+import { AlertController, ToastController } from '@ionic/angular';
+
+
 
 @Component({
   selector: 'app-tab1',
@@ -8,6 +11,73 @@ import { Component } from '@angular/core';
 })
 export class Tab1Page {
 
-  constructor() {}
+  constructor(
+    public alertController: AlertController, 
+    public toastController: ToastController) {}
+
+
+  async AgregarLista() {
+    let alerta = await this.alertController.create({
+      header: 'Agregar lista',
+      inputs: [
+        {
+          type: 'text',
+          name: 'titulo',
+          placeholder: 'Ingresar nombre de la lista'
+        }
+      ],
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Crear',
+          handler: (data:any) => {
+            console.log(data);
+          }
+        },
+  
+      ]
+
+
+    });
+
+    await alerta.present();
+    console.log('Click en el botón')
+
+
+  }
+
+  /**
+   * @function validarInput
+   * @description Valida que el input no esté vacío y que tenga un título.
+   */
+  validarInput (input:any):boolean {
+    if (input && input.titulo) {
+      return true;
+    }
+    this.presentToast('Debe ingresar un valor', 'danger'); 
+    return false;
+  }
+
+
+
+/**
+ * 
+ * @function presentToast
+ * @description Muestra un toast con el mensaje y color especificados.
+ * * */
+  async presentToast(message: string, color: string) {
+
+    let toast = await this.toastController.create({
+      message: message,
+      duration: 2000,
+      color: color
+    });
+
+    toast.present();
+  }
+
 
 }
