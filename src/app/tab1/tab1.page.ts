@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AlertController, ToastController } from '@ionic/angular';
 import { ListaService } from '../services/lista';
+import { Lista } from '../models/lista.model';
 
 
 @Component({
@@ -38,10 +39,14 @@ export class Tab1Page {
           text: 'Crear',
           handler: (data:any) => {
             let esValido: boolean = this.validarInput(data);
-            
+
             if(esValido){
               this.listaService.crearLista(data.titulo);
+              this.presentToast('Lista creada correctamente', 'success');
+              
             }
+
+            
           }
         }
       ]
@@ -80,5 +85,17 @@ export class Tab1Page {
 
     toast.present();
   }
+
+  editarLista(listaItem: Lista) {
+    console.log("Editar lista: ", listaItem);
+  }
+
+  eliminarLista(listaItem: Lista) {
+    console.log("Eliminar lista: ", listaItem);
+  }
+
+
+
+
 }
 
