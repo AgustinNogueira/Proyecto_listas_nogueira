@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { Lista } from '../models/lista.model';
 import { Actividad } from '../models/actividad.model';
-
+import { AlertController, ToastController } from '@ionic/angular';
 
 @Injectable({
     providedIn: 'root'
@@ -12,7 +12,11 @@ export class ListaService {
     readonly listas = this.estadoListas.asReadonly();
 
 
-    constructor() {
+    constructor(
+        public alertController: AlertController,
+        public toastController: ToastController
+    ) 
+    {
         this.cargarStorage();
     }
 
@@ -27,13 +31,9 @@ export class ListaService {
         this.estadoListas.update((listas) => [...listas]);
         this.persistirStorage();
     }
-
-    private persistirStorage() {
-        const stringListas = JSON.stringify(this.estadoListas());
-        localStorage.setItem('listas', stringListas);
-    }
-
+    
     private cargarStorage() {
+
         const listaStorage = localStorage.getItem('listas');
 
         if (listaStorage === null) {
@@ -45,6 +45,10 @@ export class ListaService {
             this.estadoListas.set(objLista);
         }
 
+    }
+    private persistirStorage() {
+        const stringListas = JSON.stringify(this.estadoListas());
+        localStorage.setItem('listas', stringListas);
     }
 
     eliminarLista(listaItem: Lista) {
@@ -61,7 +65,33 @@ export class ListaService {
         console.log("Editar lista: ", listaItem);
     }
 
+    validarInput(input: any): boolean {
+        if (input && input.titulo) {
+            return true;
+        }
+        this.presentToast('Debe ingresar un valor', 'danger');
+        return false;
+    }
 
+    async presentToast(message: string, color: string) {
+
+        let toast = await this.toastController.create({
+            message: message,
+            duration: 2000,
+            color: color
+        });
+
+        toast.present();
+    }
+
+    obtenerLista(idLista: string | number){
+        const id = Number(idLista);
+        let lista = this.listas().find((lista) => lista.id === id);
+        return lista;
+    }
+
+
+    
 }
 
 

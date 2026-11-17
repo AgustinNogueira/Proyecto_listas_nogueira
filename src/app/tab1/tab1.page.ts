@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, ToastController } from '@ionic/angular';
 import { ListaService } from '../services/lista';
-import { Lista } from '../models/lista.model';
 
 
 @Component({
@@ -13,15 +11,12 @@ import { Lista } from '../models/lista.model';
 export class Tab1Page {
 
   constructor(
-    public alertController: AlertController, 
-    public toastController: ToastController,
-    public listaService: ListaService) {}
-
-    
+    public listaService: ListaService
+  ) {}
 
 
   async AgregarLista() {
-    let alerta = await this.alertController.create({
+    let alerta = await this.listaService.alertController.create({
       header: 'Agregar lista',
       inputs: [
         {
@@ -38,11 +33,11 @@ export class Tab1Page {
         {
           text: 'Crear',
           handler: (data:any) => {
-            let esValido: boolean = this.validarInput(data);
+            let esValido: boolean = this.listaService.validarInput(data);
 
             if(esValido){
               this.listaService.crearLista(data.titulo);
-              this.presentToast('Lista creada correctamente', 'success');
+              this.listaService.presentToast('Lista creada correctamente', 'success');
               
             }
 
@@ -56,82 +51,5 @@ export class Tab1Page {
 
 
   }
-
-    /**
-     * @function validarInput
-     * @description Valida que el input no esté vacío y que tenga un título.
-     */
-    
-    validarInput (input:any):boolean {
-    if (input && input.titulo) {
-      return true;
-    }
-    this.presentToast('Debe ingresar un valor', 'danger'); 
-    return false;
-     }
-
-  /**
- * 
- * @function presentToast
- * @description Muestra un toast con el mensaje y color especificados.
- * * */
-  async presentToast(message: string, color: string) {
-
-    let toast = await this.toastController.create({
-      message: message,
-      duration: 2000,
-      color: color
-    });
-
-    toast.present();
-  }
-
-  
-  eliminarLista(listaItem: Lista) {
-    this.listaService.eliminarLista(listaItem);
-    console.log("Eliminar lista: ", listaItem);
-  }
-  
-  async editarLista(lista : Lista) {
-    let alerta = await this.alertController.create({
-      header: 'Editar lista',
-      inputs: [
-        {
-          type: 'text',
-          name: 'titulo',
-          placeholder: 'Ingresar nuevo nombre de la lista',
-          value: lista.titulo
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Editar',
-          handler: (data:any) => {
-            let esValido: boolean = this.validarInput(data);
-            if(esValido){
-              lista.titulo = data.titulo;
-              this.listaService.editarLista(lista);
-
-
-              this.presentToast('Lista editada correctamente!', 'success');
-            }
- 
- 
- 
-          
-          }
-        }
-      ]
-       
-    });
-
-    await alerta.present();
-  }
-
-
 }
 
